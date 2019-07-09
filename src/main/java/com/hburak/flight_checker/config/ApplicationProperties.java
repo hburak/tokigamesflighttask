@@ -14,6 +14,9 @@ public class ApplicationProperties {
     @Value("${spring.data.rest.default-page-size}")
     private int defaultPageSize;
 
+    @Value("${hello.message}")
+    private String helloMessage;
+
     public String getCheapFlightsUrl() {
         return cheapFlightsUrl;
     }
@@ -24,5 +27,9 @@ public class ApplicationProperties {
 
     public int getDefaultPageSize() {
         return defaultPageSize;
+    }
+
+    public String getHelloMessage() {
+        return helloMessage;
     }
 }
