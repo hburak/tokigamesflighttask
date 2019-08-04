@@ -7,6 +7,8 @@ import com.hburak.flight_checker.entity.Flight;
 import com.hburak.flight_checker.repository.FlightRepository;
 import com.hburak.flight_checker.service.FlightService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@CacheConfig(cacheNames={"flights"})
 public class FlightServiceImpl implements FlightService {
     private final FlightRepository flightRepository;
     private final ApplicationProperties applicationProperties;
@@ -43,9 +46,19 @@ public class FlightServiceImpl implements FlightService {
         return flightRepository.getOne(id);
     }
 
+    @Cacheable
     @Override
     public List<Flight> getFlights() {
+        simulateSlowService();
         return flightRepository.findAll();
+    }
+
+    private void simulateSlowService() {
+        try {
+            Thread.sleep(3000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
